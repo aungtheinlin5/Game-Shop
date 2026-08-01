@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kilo Taxi — Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&family=Padauk:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   KILO TAXI — DESIGN SYSTEM
+   Palette inspired by a Yangon night-taxi meter: deep asphalt
+   navy, meter-amber accent, and a fare-green for money states.
+   ============================================================ */
+
+:root {
+  /* Colors */
+  --ink: #0E1420;          /* asphalt navy - background */
+  --ink-2: #161F30;        /* card surface */
+  --ink-3: #1E2A40;        /* elevated surface / input bg */
+  --line: #2A3650;         /* hairline borders */
+  --paper: #F4F1EA;        /* warm off-white for light zones */
+  --amber: #F5A623;        /* taxi meter amber - primary accent */
+  --amber-dim: #C6820E;
+  --fare-green: #3FBF7F;   /* money / success */
+  --alert-red: #E5484D;
+  --text-hi: #F2F3F7;
+  --text-mid: #A7B0C2;
+  --text-low: #6B7690;
+
+  /* Type */
+  --font-display: "Space Grotesk", "Pyidaungsu", sans-serif;
+  --font-body: "Inter", "Pyidaungsu", sans-serif;
+  --font-mono: "IBM Plex Mono", monospace;
+
+  /* Radius / shadow */
+  --r-sm: 8px;
+  --r-md: 14px;
+  --r-lg: 22px;
+  --shadow-card: 0 12px 30px -12px rgba(0,0,0,0.5);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  background: var(--ink);
+  color: var(--text-hi);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  min-height: 100vh;
+  background-image:
+    radial-gradient(circle at 15% 0%, rgba(245,166,35,0.08), transparent 40%),
+    radial-gradient(circle at 85% 100%, rgba(63,191,127,0.06), transparent 45%);
+}
+
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: pointer; }
+input, select, textarea { font-family: inherit; }
+
+::selection { background: var(--amber); color: var(--ink); }
+
+/* ---------------- Layout shells ---------------- */
+
+.kt-shell {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.kt-shell-wide {
+  max-width: 1180px;
+}
+
+.kt-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--line);
+  position: sticky;
+  top: 0;
+  background: rgba(14,20,32,0.85);
+  backdrop-filter: blur(10px);
+  z-index: 20;
+}
+
+.kt-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: -0.01em;
+}
+
+.kt-brand .mark {
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  background: linear-gradient(145deg, var(--amber), var(--amber-dim));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink);
+  font-weight: 800;
+  font-size: 14px;
+  font-family: var(--font-mono);
+}
+
+.kt-badge {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-mid);
+  border: 1px solid var(--line);
+  border-radius: 100px;
+  padding: 5px 10px;
+}
+
+.kt-main {
+  flex: 1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* ---------------- Cards ---------------- */
+
+.kt-card {
+  background: var(--ink-2);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: 20px;
+  box-shadow: var(--shadow-card);
+}
+
+.kt-card-title {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-hi);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ---------------- Forms ---------------- */
+
+.kt-field { margin-bottom: 14px; }
+
+.kt-label {
+  display: block;
+  font-size: 12.5px;
+  color: var(--text-mid);
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.kt-input, .kt-select, .kt-textarea {
+  width: 100%;
+  background: var(--ink-3);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  padding: 12px 14px;
+  color: var(--text-hi);
+  font-size: 14.5px;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.kt-input::placeholder { color: var(--text-low); }
+
+.kt-input:focus, .kt-select:focus, .kt-textarea:focus {
+  outline: none;
+  border-color: var(--amber);
+  background: #22304A;
+}
+
+.kt-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23A7B0C2' stroke-width='1.6' fill='none'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 34px;
+}
+
+/* Zone toggle (inner / outer) */
+.kt-toggle-group {
+  display: flex;
+  background: var(--ink-3);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  padding: 4px;
+  gap: 4px;
+}
+
+.kt-toggle-option {
+  flex: 1;
+  text-align: center;
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-mid);
+  transition: all 0.15s ease;
+}
+
+.kt-toggle-option.active {
+  background: var(--amber);
+  color: var(--ink);
+}
+
+/* ---------------- Buttons ---------------- */
+
+.kt-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 13px 18px;
+  border-radius: var(--r-sm);
+  border: none;
+  font-size: 14.5px;
+  font-weight: 600;
+  transition: transform 0.1s ease, opacity 0.15s ease, background 0.15s ease;
+}
+
+.kt-btn:active { transform: scale(0.98); }
+.kt-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.kt-btn-primary { background: var(--amber); color: var(--ink); }
+.kt-btn-primary:hover:not(:disabled) { background: #ffb43d; }
+
+.kt-btn-ghost {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--text-hi);
+}
+.kt-btn-ghost:hover { border-color: var(--amber); color: var(--amber); }
+
+.kt-btn-danger { background: var(--alert-red); color: #fff; }
+.kt-btn-success { background: var(--fare-green); color: #06251A; }
+
+.kt-btn-sm { padding: 8px 12px; font-size: 13px; width: auto; }
+
+/* ---------------- Fare display ---------------- */
+
+.kt-fare-box {
+  background: linear-gradient(135deg, rgba(245,166,35,0.12), rgba(245,166,35,0.02));
+  border: 1px solid rgba(245,166,35,0.35);
+  border-radius: var(--r-md);
+  padding: 18px;
+  text-align: center;
+}
+
+.kt-fare-label {
+  font-size: 11.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--amber);
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.kt-fare-amount {
+  font-family: var(--font-mono);
+  font-size: 34px;
+  font-weight: 700;
+  color: var(--text-hi);
+  letter-spacing: -0.02em;
+}
+
+.kt-fare-breakdown {
+  margin-top: 10px;
+  font-size: 12.5px;
+  color: var(--text-mid);
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+/* ---------------- Status pills ---------------- */
+
+.kt-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 100px;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.kt-pill::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.kt-pill-pending { background: rgba(245,166,35,0.15); color: var(--amber); }
+.kt-pill-assigned { background: rgba(94,150,255,0.15); color: #7EA6FF; }
+.kt-pill-ongoing { background: rgba(94,150,255,0.15); color: #7EA6FF; }
+.kt-pill-completed { background: rgba(63,191,127,0.15); color: var(--fare-green); }
+.kt-pill-cancelled { background: rgba(229,72,77,0.15); color: var(--alert-red); }
+.kt-pill-approved { background: rgba(63,191,127,0.15); color: var(--fare-green); }
+.kt-pill-rejected { background: rgba(229,72,77,0.15); color: var(--alert-red); }
+
+/* ---------------- Wallet display ---------------- */
+
+.kt-wallet-card {
+  background: linear-gradient(135deg, #1A2438, #0F1522);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: 22px;
+  position: relative;
+  overflow: hidden;
+}
+
+.kt-wallet-card::after {
+  content: "";
+  position: absolute;
+  top: -40%; right: -20%;
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, rgba(245,166,35,0.15), transparent 70%);
+}
+
+.kt-wallet-label {
+  font-size: 12px;
+  color: var(--text-mid);
+  margin-bottom: 8px;
+}
+
+.kt-wallet-amount {
+  font-family: var(--font-mono);
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+/* ---------------- Table (admin) ---------------- */
+
+.kt-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+}
+
+.kt-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+}
+
+.kt-table th {
+  text-align: left;
+  padding: 12px 14px;
+  background: var(--ink-3);
+  color: var(--text-mid);
+  font-weight: 600;
+  font-size: 11.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+
+.kt-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--line);
+  color: var(--text-hi);
+  white-space: nowrap;
+}
+
+.kt-table tr:last-child td { border-bottom: none; }
+.kt-table tbody tr:hover { background: rgba(255,255,255,0.02); }
+
+/* ---------------- Grid / stats (admin dashboard) ---------------- */
+
+.kt-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+}
+
+.kt-stat {
+  background: var(--ink-2);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 16px 18px;
+}
+
+.kt-stat-label {
+  font-size: 12px;
+  color: var(--text-mid);
+  margin-bottom: 8px;
+}
+
+.kt-stat-value {
+  font-family: var(--font-mono);
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.kt-stat-value.amber { color: var(--amber); }
+.kt-stat-value.green { color: var(--fare-green); }
+.kt-stat-value.red { color: var(--alert-red); }
+
+/* ---------------- Tabs (admin nav) ---------------- */
+
+.kt-tabs {
+  display: flex;
+  gap: 6px;
+  border-bottom: 1px solid var(--line);
+  overflow-x: auto;
+  padding-bottom: 1px;
+}
+
+.kt-tab {
+  padding: 12px 16px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-mid);
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+}
+
+.kt-tab.active {
+  color: var(--amber);
+  border-bottom-color: var(--amber);
+}
+
+.kt-tab-panel { display: none; }
+.kt-tab-panel.active { display: block; }
+
+/* ---------------- Login screens ---------------- */
+
+.kt-login-shell {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.kt-login-card {
+  width: 100%;
+  max-width: 380px;
+}
+
+.kt-login-header {
+  text-align: center;
+  margin-bottom: 26px;
+}
+
+.kt-login-header .mark {
+  width: 52px; height: 52px;
+  border-radius: 16px;
+  background: linear-gradient(145deg, var(--amber), var(--amber-dim));
+  display: flex; align-items: center; justify-content: center;
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-weight: 800;
+  font-size: 22px;
+  margin: 0 auto 14px;
+}
+
+.kt-login-header h1 {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.kt-login-header p {
+  color: var(--text-mid);
+  font-size: 13.5px;
+  margin-top: 4px;
+}
+
+/* ---------------- Empty states ---------------- */
+
+.kt-empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-mid);
+  font-size: 13.5px;
+}
+
+.kt-empty .icon { font-size: 30px; margin-bottom: 10px; opacity: 0.5; }
+
+/* ---------------- Trip list items ---------------- */
+
+.kt-trip-item {
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  background: var(--ink-3);
+}
+
+.kt-trip-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.kt-trip-route {
+  font-size: 13.5px;
+  color: var(--text-hi);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.kt-trip-meta {
+  font-size: 12px;
+  color: var(--text-mid);
+  font-family: var(--font-mono);
+}
+
+/* ---------------- Toast ---------------- */
+
+.kt-toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--ink-3);
+  border: 1px solid var(--line);
+  color: var(--text-hi);
+  padding: 12px 20px;
+  border-radius: var(--r-sm);
+  font-size: 13.5px;
+  box-shadow: var(--shadow-card);
+  opacity: 0;
+  transition: all 0.25s ease;
+  z-index: 999;
+  max-width: 90vw;
+}
+
+.kt-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.kt-toast-error { border-color: var(--alert-red); }
+.kt-toast-success { border-color: var(--fare-green); }
+
+/* ---------------- Map box ---------------- */
+
+#map { width: 100%; height: 220px; border-radius: var(--r-md); border: 1px solid var(--line); }
+
+/* ---------------- Loader ---------------- */
+
+.kt-spinner {
+  width: 16px; height: 16px;
+  border: 2px solid rgba(255,255,255,0.25);
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: kt-spin 0.7s linear infinite;
+  display: inline-block;
+}
+
+@keyframes kt-spin { to { transform: rotate(360deg); } }
+
+/* ---------------- Responsive ---------------- */
+
+@media (min-width: 900px) {
+  .kt-main-grid {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 20px;
+  }
+}
+
+.kt-sidebar {
+  background: var(--ink-2);
+  border-right: 1px solid var(--line);
+  padding: 20px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.kt-sidebar-link {
+  padding: 11px 14px;
+  border-radius: var(--r-sm);
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--text-mid);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.kt-sidebar-link.active {
+  background: rgba(245,166,35,0.12);
+  color: var(--amber);
+}
+
+.kt-sidebar-link:hover:not(.active) { background: var(--ink-3); color: var(--text-hi); }
+
+/* Utility */
+.kt-flex { display: flex; align-items: center; gap: 8px; }
+.kt-flex-between { display: flex; align-items: center; justify-content: space-between; }
+.kt-muted { color: var(--text-mid); }
+.kt-mono { font-family: var(--font-mono); }
+.kt-hidden { display: none !important; }
+.kt-mt-8 { margin-top: 8px; }
+.kt-mt-16 { margin-top: 16px; }
+
+body, .kt-input, .kt-select, .kt-btn, .kt-label, .kt-card-title, .kt-tab { font-family: "Padauk", "Inter", sans-serif; }
+  .kt-brand { font-family: "Space Grotesk", sans-serif; }
+  .kt-admin-shell { max-width: 1180px; margin: 0 auto; }
+</style>
+</head>
+<body>
+
+<!-- ============== LOGIN SCREEN ============== -->
+<div class="kt-login-shell" id="loginScreen">
+  <div class="kt-login-card">
+    <div class="kt-login-header">
+      <div class="mark">KT</div>
+      <h1>Admin လော့ဂ်အင်</h1>
+      <p>Username: admin / Password: admin123 (default)</p>
+    </div>
+    <div class="kt-card">
+      <div class="kt-field">
+        <label class="kt-label">Username</label>
+        <input type="text" id="loginUsername" class="kt-input" placeholder="username">
+      </div>
+      <div class="kt-field">
+        <label class="kt-label">Password</label>
+        <input type="password" id="loginPassword" class="kt-input" placeholder="••••••••">
+      </div>
+      <button class="kt-btn kt-btn-primary" id="loginBtn">ဝင်မည်</button>
+      <div id="loginError" class="kt-hidden kt-mt-16" style="color: var(--alert-red); font-size: 13px; text-align:center;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============== ADMIN APP ============== -->
+<div class="kt-hidden" id="appScreen">
+
+  <div class="kt-topbar">
+    <div class="kt-admin-shell kt-flex-between" style="width:100%;">
+      <div class="kt-brand"><span class="mark">KT</span> Kilo Taxi Admin</div>
+      <button class="kt-btn kt-btn-ghost kt-btn-sm" id="logoutBtn">ထွက်မည်</button>
+    </div>
+  </div>
+
+  <div class="kt-admin-shell" style="padding: 20px;">
+
+    <!-- Stats -->
+    <div class="kt-stat-grid kt-mt-16" id="statGrid"></div>
+
+    <!-- Tabs -->
+    <div class="kt-tabs kt-mt-16">
+      <div class="kt-tab active" data-tab="pricing">စျေးနှုန်းသတ်မှတ်ချက်</div>
+      <div class="kt-tab" data-tab="drivers">ယာဉ်မောင်းများ</div>
+      <div class="kt-tab" data-tab="topups">ငွေဖြည့်တောင်းဆိုမှု</div>
+      <div class="kt-tab" data-tab="trips">ခရီးစဉ်များ</div>
+    </div>
+
+    <!-- Pricing panel -->
+    <div class="kt-tab-panel active" id="panel-pricing">
+      <div class="kt-card kt-mt-16" style="max-width:480px;">
+        <div class="kt-card-title">💴 နှုန်းထားများ သတ်မှတ်ခြင်း</div>
+        <div class="kt-field">
+          <label class="kt-label">Start Fare — မြို့တွင်း (Ks)</label>
+          <input type="number" id="priceInner" class="kt-input">
+        </div>
+        <div class="kt-field">
+          <label class="kt-label">Start Fare — မြို့ပြင် (Ks)</label>
+          <input type="number" id="priceOuter" class="kt-input">
+        </div>
+        <div class="kt-field">
+          <label class="kt-label">1 KM နှုန်းထား (Ks)</label>
+          <input type="number" id="priceKm" class="kt-input">
+        </div>
+        <button class="kt-btn kt-btn-primary" id="savePricingBtn">သိမ်းမည်</button>
+      </div>
+    </div>
+
+    <!-- Drivers panel -->
+    <div class="kt-tab-panel" id="panel-drivers">
+      <div class="kt-card kt-mt-16">
+        <div class="kt-card-title">➕ ယာဉ်မောင်းအသစ်ဖန်တီးမည်</div>
+        <div style="display:grid; grid-template-columns: repeat(auto-fit,minmax(160px,1fr)); gap:10px;">
+          <div class="kt-field" style="margin:0;">
+            <label class="kt-label">အမည်</label>
+            <input type="text" id="newDriverName" class="kt-input">
+          </div>
+          <div class="kt-field" style="margin:0;">
+            <label class="kt-label">ဖုန်းနံပါတ်</label>
+            <input type="text" id="newDriverPhone" class="kt-input">
+          </div>
+          <div class="kt-field" style="margin:0;">
+            <label class="kt-label">ကားနံပါတ်</label>
+            <input type="text" id="newDriverVehicleNo" class="kt-input">
+          </div>
+          <div class="kt-field" style="margin:0;">
+            <label class="kt-label">ယာဉ်အမျိုးအစား</label>
+            <input type="text" id="newDriverVehicleType" class="kt-input" placeholder="Car / Bike">
+          </div>
+          <div class="kt-field" style="margin:0;">
+            <label class="kt-label">Username</label>
+            <input type="text" id="newDriverUsername" class="kt-input">
+          </div>
+          <div class="kt-field" style="margin:0;">
+            <label class="kt-label">Password</label>
+            <input type="text" id="newDriverPassword" class="kt-input">
+          </div>
+        </div>
+        <button class="kt-btn kt-btn-primary kt-mt-16" id="createDriverBtn">ဖန်တီးမည်</button>
+      </div>
+
+      <div class="kt-card kt-mt-16">
+        <div class="kt-card-title">🚕 ယာဉ်မောင်းစာရင်း</div>
+        <div class="kt-table-wrap">
+          <table class="kt-table">
+            <thead><tr>
+              <th>အမည်</th><th>ဖုန်း</th><th>ကားနံပါတ်</th><th>Username</th>
+              <th>Wallet</th><th>Status</th><th></th>
+            </tr></thead>
+            <tbody id="driversTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Topups panel -->
+    <div class="kt-tab-panel" id="panel-topups">
+      <div class="kt-card kt-mt-16">
+        <div class="kt-card-title">💵 ငွေဖြည့်တောင်းဆိုမှုများ</div>
+        <div class="kt-table-wrap">
+          <table class="kt-table">
+            <thead><tr>
+              <th>ယာဉ်မောင်း</th><th>ပမာဏ</th><th>မှတ်ချက်</th><th>အချိန်</th><th>Status</th><th></th>
+            </tr></thead>
+            <tbody id="topupsTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Trips panel -->
+    <div class="kt-tab-panel" id="panel-trips">
+      <div class="kt-card kt-mt-16">
+        <div class="kt-card-title">🧭 ခရီးစဉ်များ</div>
+        <div class="kt-table-wrap">
+          <table class="kt-table">
+            <thead><tr>
+              <th>ခရီးသည်</th><th>Route</th><th>Zone</th><th>Km</th><th>ခ</th><th>ဖြတ်ငွေ</th>
+              <th>Driver</th><th>Status</th><th></th>
+            </tr></thead>
+            <tbody id="tripsTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  // ============================================================
+  // ဒီနေရာမှာ Supabase URL / Key နဲ့ Google Maps API Key ဖြည့်ပါ
+  // ============================================================
+  const SUPABASE_URL = "https://wnceuosxvcbuijgazfjg.supabase.co";
+  const SUPABASE_ANON_KEY = "sb_publishable_qgef5kcWKT5aghNNhRd6xg_e0WEXUx9";
+  const GOOGLE_MAPS_API_KEY = "YOUR_GOOGLE_MAPS_API_KEY";
+
+  const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  function calculateFare(startFare, perKmRate, distanceKm) {
+    return Math.round(Number(startFare) + Number(perKmRate) * Number(distanceKm));
+  }
+
+  function formatMMK(amount) {
+    return Number(amount).toLocaleString("en-US") + " Ks";
+  }
+
+  function showToast(message, type = "info") {
+    const existing = document.querySelector(".kt-toast");
+    if (existing) existing.remove();
+    const toast = document.createElement("div");
+    toast.className = `kt-toast kt-toast-${type}`;
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    requestAnimationFrame(() => toast.classList.add("show"));
+    setTimeout(() => {
+      toast.classList.remove("show");
+      setTimeout(() => toast.remove(), 300);
+    }, 3200);
+  }
+</script>
+<script>
+let currentAdmin = null;
+let driversCache = [];
+
+window.addEventListener("DOMContentLoaded", () => {
+  const saved = sessionStorage.getItem("kt_admin");
+  if (saved) { currentAdmin = JSON.parse(saved); showApp(); }
+});
+
+document.getElementById("loginBtn").addEventListener("click", async () => {
+  const username = document.getElementById("loginUsername").value.trim();
+  const password = document.getElementById("loginPassword").value;
+  const errEl = document.getElementById("loginError");
+  errEl.classList.add("kt-hidden");
+
+  const { data, error } = await supabaseClient
+    .from("admin_users").select("*")
+    .eq("username", username).eq("password", password).maybeSingle();
+
+  if (error || !data) {
+    errEl.textContent = "Username သို့မဟုတ် Password မှားနေပါသည်";
+    errEl.classList.remove("kt-hidden");
+    return;
+  }
+
+  currentAdmin = data;
+  sessionStorage.setItem("kt_admin", JSON.stringify(data));
+  showApp();
+});
+
+document.getElementById("logoutBtn").addEventListener("click", () => {
+  sessionStorage.removeItem("kt_admin");
+  location.reload();
+});
+
+function showApp() {
+  document.getElementById("loginScreen").classList.add("kt-hidden");
+  document.getElementById("appScreen").classList.remove("kt-hidden");
+  loadPricing();
+  loadDrivers();
+  loadTopups();
+  loadTrips();
+  loadStats();
+
+  supabaseClient.channel("admin-updates")
+    .on("postgres_changes", { event: "*", schema: "public", table: "trips" }, () => { loadTrips(); loadStats(); })
+    .on("postgres_changes", { event: "*", schema: "public", table: "topup_requests" }, () => { loadTopups(); loadStats(); })
+    .on("postgres_changes", { event: "*", schema: "public", table: "drivers" }, () => { loadDrivers(); loadStats(); })
+    .subscribe();
+}
+
+// ---- Tabs ----
+document.querySelectorAll(".kt-tab").forEach(tab => {
+  tab.addEventListener("click", () => {
+    document.querySelectorAll(".kt-tab").forEach(t => t.classList.remove("active"));
+    document.querySelectorAll(".kt-tab-panel").forEach(p => p.classList.remove("active"));
+    tab.classList.add("active");
+    document.getElementById(`panel-${tab.dataset.tab}`).classList.add("active");
+  });
+});
+
+// ---- Stats ----
+async function loadStats() {
+  const { data: trips } = await supabaseClient.from("trips").select("status, total_fare");
+  const { data: topups } = await supabaseClient.from("topup_requests").select("status, amount");
+  const { data: drivers } = await supabaseClient.from("drivers").select("wallet_balance, is_active");
+
+  const pendingTrips = (trips || []).filter(t => t.status === "pending").length;
+  const completedTrips = (trips || []).filter(t => t.status === "completed").length;
+  const revenue = (trips || []).filter(t => t.status === "completed").reduce((s, t) => s + Number(t.total_fare), 0);
+  const pendingTopups = (topups || []).filter(t => t.status === "pending").length;
+  const totalWallet = (drivers || []).reduce((s, d) => s + Number(d.wallet_balance), 0);
+  const activeDrivers = (drivers || []).filter(d => d.is_active).length;
+
+  document.getElementById("statGrid").innerHTML = `
+    <div class="kt-stat"><div class="kt-stat-label">Pending Bookings</div><div class="kt-stat-value amber">${pendingTrips}</div></div>
+    <div class="kt-stat"><div class="kt-stat-label">Completed Trips</div><div class="kt-stat-value green">${completedTrips}</div></div>
+    <div class="kt-stat"><div class="kt-stat-label">Total Revenue</div><div class="kt-stat-value">${formatMMK(revenue)}</div></div>
+    <div class="kt-stat"><div class="kt-stat-label">Pending Top-ups</div><div class="kt-stat-value amber">${pendingTopups}</div></div>
+    <div class="kt-stat"><div class="kt-stat-label">Active Drivers</div><div class="kt-stat-value">${activeDrivers}</div></div>
+    <div class="kt-stat"><div class="kt-stat-label">Total Driver Wallets</div><div class="kt-stat-value green">${formatMMK(totalWallet)}</div></div>
+  `;
+}
+
+// ---- Pricing ----
+async function loadPricing() {
+  const { data } = await supabaseClient.from("pricing_settings").select("*").eq("id", 1).single();
+  if (data) {
+    document.getElementById("priceInner").value = data.start_fare_inner;
+    document.getElementById("priceOuter").value = data.start_fare_outer;
+    document.getElementById("priceKm").value = data.per_km_rate;
+  }
+}
+
+document.getElementById("savePricingBtn").addEventListener("click", async () => {
+  const start_fare_inner = Number(document.getElementById("priceInner").value);
+  const start_fare_outer = Number(document.getElementById("priceOuter").value);
+  const per_km_rate = Number(document.getElementById("priceKm").value);
+
+  const { error } = await supabaseClient.from("pricing_settings")
+    .update({ start_fare_inner, start_fare_outer, per_km_rate, updated_at: new Date().toISOString() })
+    .eq("id", 1);
+
+  if (error) { showToast("မအောင်မြင်ပါ", "error"); return; }
+  showToast("နှုန်းထားများ သိမ်းပြီးပါပြီ", "success");
+});
+
+// ---- Drivers ----
+document.getElementById("createDriverBtn").addEventListener("click", async () => {
+  const name = document.getElementById("newDriverName").value.trim();
+  const phone = document.getElementById("newDriverPhone").value.trim();
+  const vehicle_no = document.getElementById("newDriverVehicleNo").value.trim();
+  const vehicle_type = document.getElementById("newDriverVehicleType").value.trim();
+  const username = document.getElementById("newDriverUsername").value.trim();
+  const password = document.getElementById("newDriverPassword").value.trim();
+
+  if (!name || !phone || !username || !password) {
+    showToast("လိုအပ်သောအချက်များ ဖြည့်ပေးပါ", "error");
+    return;
+  }
+
+  const { error } = await supabaseClient.from("drivers").insert({
+    name, phone, vehicle_no, vehicle_type, username, password,
+  });
+
+  if (error) { showToast("မအောင်မြင်ပါ - " + error.message, "error"); return; }
+
+  showToast("ယာဉ်မောင်းအသစ် ဖန်တီးပြီးပါပြီ", "success");
+  ["newDriverName","newDriverPhone","newDriverVehicleNo","newDriverVehicleType","newDriverUsername","newDriverPassword"]
+    .forEach(id => document.getElementById(id).value = "");
+  loadDrivers();
+});
+
+async function loadDrivers() {
+  const { data, error } = await supabaseClient.from("drivers").select("*").order("created_at", { ascending: false });
+  if (error || !data) return;
+  driversCache = data;
+
+  document.getElementById("driversTableBody").innerHTML = data.map(d => `
+    <tr>
+      <td>${d.name}</td>
+      <td>${d.phone}</td>
+      <td>${d.vehicle_no || "-"}</td>
+      <td class="kt-mono">${d.username}</td>
+      <td class="kt-mono">${formatMMK(d.wallet_balance)}</td>
+      <td><span class="kt-pill ${d.is_active ? "kt-pill-approved" : "kt-pill-rejected"}">${d.is_active ? "Active" : "Inactive"}</span></td>
+      <td><button class="kt-btn kt-btn-ghost kt-btn-sm" onclick="toggleDriver('${d.id}', ${d.is_active})">${d.is_active ? "Deactivate" : "Activate"}</button></td>
+    </tr>
+  `).join("");
+}
+
+async function toggleDriver(id, currentStatus) {
+  await supabaseClient.from("drivers").update({ is_active: !currentStatus }).eq("id", id);
+  loadDrivers();
+}
+
+// ---- Top-ups ----
+async function loadTopups() {
+  const { data, error } = await supabaseClient
+    .from("topup_requests")
+    .select("*, drivers(name, phone)")
+    .order("requested_at", { ascending: false })
+    .limit(50);
+
+  if (error || !data) return;
+
+  document.getElementById("topupsTableBody").innerHTML = data.map(r => `
+    <tr>
+      <td>${r.drivers?.name || "-"}</td>
+      <td class="kt-mono">${formatMMK(r.amount)}</td>
+      <td>${r.note || "-"}</td>
+      <td class="kt-mono">${new Date(r.requested_at).toLocaleString("my-MM")}</td>
+      <td><span class="kt-pill kt-pill-${r.status}">${r.status}</span></td>
+      <td>
+        ${r.status === "pending" ? `
+          <button class="kt-btn kt-btn-success kt-btn-sm" onclick="approveTopup('${r.id}')">Approve</button>
+          <button class="kt-btn kt-btn-danger kt-btn-sm" onclick="rejectTopup('${r.id}')">Reject</button>
+        ` : "-"}
+      </td>
+    </tr>
+  `).join("");
+}
+
+async function approveTopup(id) {
+  const { error } = await supabaseClient.rpc("approve_topup", { request_id: id, reviewer: currentAdmin.username });
+  if (error) { showToast("မအောင်မြင်ပါ - " + error.message, "error"); return; }
+  showToast("Top-up အတည်ပြုပြီးပါပြီ", "success");
+  loadTopups(); loadDrivers();
+}
+
+async function rejectTopup(id) {
+  const { error } = await supabaseClient.from("topup_requests")
+    .update({ status: "rejected", reviewed_at: new Date().toISOString(), reviewed_by: currentAdmin.username })
+    .eq("id", id);
+  if (error) { showToast("မအောင်မြင်ပါ", "error"); return; }
+  showToast("Top-up ငြင်းပယ်ပြီးပါပြီ", "success");
+  loadTopups();
+}
+
+// ---- Trips ----
+async function loadTrips() {
+  const { data, error } = await supabaseClient
+    .from("trips")
+    .select("*, drivers(name)")
+    .order("created_at", { ascending: false })
+    .limit(50);
+
+  if (error || !data) return;
+
+  document.getElementById("tripsTableBody").innerHTML = data.map(t => `
+    <tr>
+      <td>${t.passenger_name}<br><span class="kt-muted" style="font-size:11.5px;">${t.passenger_phone}</span></td>
+      <td style="max-width:220px; white-space:normal;">📍 ${t.pickup_address}<br>🏁 ${t.dropoff_address}</td>
+      <td>${t.zone === "inner" ? "မြို့တွင်း" : "မြို့ပြင်"}</td>
+      <td class="kt-mono">${t.distance_km}</td>
+      <td class="kt-mono">${formatMMK(t.total_fare)}</td>
+      <td class="kt-mono">${t.deduct_amount != null ? formatMMK(t.deduct_amount) : "-"}</td>
+      <td>${t.drivers?.name || "-"}</td>
+      <td><span class="kt-pill kt-pill-${t.status}">${t.status}</span></td>
+      <td>
+        ${t.status === "pending" ? `
+          <div style="display:flex; gap:6px; align-items:center;">
+            <select class="kt-select" id="driverSel_${t.id}" style="min-width:120px;">
+              <option value="">Driver ရွေးမည်</option>
+              ${driversCache.filter(d => d.is_active).map(d => `<option value="${d.id}">${d.name}</option>`).join("")}
+            </select>
+            <input type="number" class="kt-input" id="deductAmt_${t.id}" value="${t.total_fare}" style="width:100px;" placeholder="ဖြတ်ငွေ">
+            <button class="kt-btn kt-btn-primary kt-btn-sm" onclick="assignDriver('${t.id}')">ချိတ်မည်</button>
+          </div>
+        ` : "-"}
+      </td>
+    </tr>
+  `).join("");
+}
+
+async function assignDriver(tripId) {
+  const driverId = document.getElementById(`driverSel_${tripId}`).value;
+  const deductAmount = Number(document.getElementById(`deductAmt_${tripId}`).value);
+
+  if (!driverId) {
+    showToast("Driver ရွေးပေးပါ", "error");
+    return;
+  }
+  if (!deductAmount || deductAmount <= 0) {
+    showToast("ဖြတ်ငွေပမာဏ မှန်ကန်စွာ ဖြည့်ပေးပါ", "error");
+    return;
+  }
+
+  const { error } = await supabaseClient.from("trips")
+    .update({
+      driver_id: driverId,
+      deduct_amount: deductAmount,
+      status: "assigned",
+      assigned_at: new Date().toISOString(),
+    })
+    .eq("id", tripId);
+
+  if (error) { showToast("မအောင်မြင်ပါ", "error"); return; }
+  showToast("Driver ချိတ်ပေးပြီးပါပြီ", "success");
+  loadTrips();
+}
+</script>
+
+</body>
+</html>
